@@ -43,13 +43,13 @@ class iCloudBackUpModel : ObservableObject {
              * 이 곳에서는 파일명 뒤에 Date()를 붙여 파일명의 중복을 피한다.
              * 개발을 진행할 때도 이 상황을 항상 고려할 것.
              */
-            let iCloudFile = iCloudDocsURL.appendingPathComponent("Youtube_Keyword_data_\(Date()).txt")
+            let iCloudFile = iCloudDocsURL.appendingPathComponent("Youtube_Keyword_data.txt")
             
-            // Check File Path Exsits Or Not
+            // Check File Path Exist Or Not
             if !FileManager.default.fileExists(atPath: iCloudDocsURL.path, isDirectory: nil) {
                 // Case File Path Doesn't Exist, Make Directory Here
                 try? FileManager.default.createDirectory(at: iCloudDocsURL, withIntermediateDirectories: true, attributes: nil)
-                print("DATA BACK UP :: CREATE iCLOUD DIRECTORY HERE")
+                print("DATA BACK UP :: CREATE iCLOUD DIRECTORY")
             }
             do {
                 // Copy Local Directory File Contents To iCloud Driver
@@ -65,4 +65,49 @@ class iCloudBackUpModel : ObservableObject {
             print("DATA BACK UP :: iCLOUD URL IS NIL CHECK XCODE SETTING")
         }
     }
+    
+    
+    /// Mark: - getDataFromiCloud
+    /// Feature: iCloud Drive에서 데이터를 Local AppDirectory로 복사하는 function
+    /// 경로가 없거나, 백업 데이터가 없으면 그에 따른 로그를 찍게 만들었으며
+    /// 개발을 진행할 경우 저 곳에서 Alert를 띄워주거나 Exception Handling을 진행하면 되겠다.
+    func getDataFromiCloud() {
+        
+        // Set iCloudDocsURL Here & Do Nil Check
+        if let iCloudDocsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") {
+            
+            // Set File Name Which One We Will Download
+            let iCloudFile = iCloudDocsURL.appendingPathComponent("Youtube_Keyword_data.txt")
+            
+            // Check File Path Exist Or Not
+            if !FileManager.default.fileExists(atPath: iCloudDocsURL.path, isDirectory: nil) {
+                // Exception Handling
+                // Alert Here
+                print("DATA BACK UP :: FILE DOESN'T EXIST CHECK BACK UP DATA")
+            } else {
+                
+                // Set Local Docs URL Here
+                let localDocsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
+                
+                // Set File Name Which One Downloaded From iCloud Drive
+                let localFile = localDocsURL.appendingPathComponent("Youtube_Keyword_data_\(Date()).txt")
+                
+                do {
+                    // Copy iCloud Drive Data To Local Directory File Contents
+                    try FileManager.default.copyItem(at: iCloudFile, to: localFile)
+                    print("DATA BACK UP :: GET BACK UP DATA SUCCESS")
+                }
+                catch let error as NSError {
+                    // Handling Exception Here When You Developing
+                    print("DATA BACK UP :: GET BACK UP DATA FAIL FROM iCLOUD DRIVER \(error) ")
+                }
+            }
+            
+        } else {
+            // Handling Exception Here When You Developing
+            print("DATA BACK UP :: iCLOUD URL IS NIL CHECK XCODE SETTING")
+        }
+        
+    }
+    
 }
