@@ -11,7 +11,7 @@ import SwiftUI
 struct iCloudDataBackUpApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            iCloudBackUpView()
         }
     }
 }
