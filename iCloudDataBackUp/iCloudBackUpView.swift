@@ -14,8 +14,6 @@ struct iCloudBackUpView: View {
             Text("데이터 백업 테스트")
                 .padding()
             
-            
-            
             HStack{
                 Button {
                     cloudBackUpModel.uploadDataAtCloud()
@@ -42,12 +40,21 @@ struct iCloudBackUpView: View {
                                 .foregroundColor(Color.white)
                         )
                 }
+                
+                Button {
+                    cloudBackUpModel.deleteCloudDataByFilePath()
+                    cloudBackUpModel.deleteLocalDataByFilePath()
+                } label: {
+                    Rectangle()
+                        .foregroundColor(Color.yellow)
+                        .cornerRadius(15)
+                        .frame(width: 120, height: 60)
+                        .overlay(
+                            Text("데이터 삭제하기")
+                                .foregroundColor(Color.white)
+                        )
+                }
             }
-            
-            
-            
-        }
-        .onAppear {
         }
     }
     

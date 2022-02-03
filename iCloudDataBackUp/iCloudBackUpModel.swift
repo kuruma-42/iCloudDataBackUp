@@ -10,6 +10,7 @@ import Foundation
 /// Mark: - iCloudBackUpModel
 /// Feature: iCloud Drive에 데이터 백업을 위한 메소드들이 모여있는 클래스
 class iCloudBackUpModel : ObservableObject {
+    fileprivate var TEST_DATA_FILE_NAME = "iCloud_BackUp_Data.txt"
     
     /// Mark: - uploadDataAtCloud
     /// Feature: FileManager를 사용하여 테스트데이터를 로컬 디렉토리 내부에 생성하고,
@@ -21,10 +22,10 @@ class iCloudBackUpModel : ObservableObject {
         
         // Set File Name
         // * File이름을 계속 같게 해도, 가장 최근에 생성한 파일로 덮어쓴다.
-        let localFile = localDocsURL.appendingPathComponent("Youtube_Keyword_data.txt")
+        let localFile = localDocsURL.appendingPathComponent(TEST_DATA_FILE_NAME)
         
         // Make Test Data Contents Here
-        let testData = NSString(string: "KEYWORD TEST FILE")
+        let testData = NSString(string: "iCLOUD BACK UP TEST FILE")
         
         do {
             // Write Test Data Here
@@ -43,7 +44,7 @@ class iCloudBackUpModel : ObservableObject {
              * 이 곳에서는 파일명 뒤에 Date()를 붙여 파일명의 중복을 피한다.
              * 개발을 진행할 때도 이 상황을 항상 고려할 것.
              */
-            let iCloudFile = iCloudDocsURL.appendingPathComponent("Youtube_Keyword_data.txt")
+            let iCloudFile = iCloudDocsURL.appendingPathComponent(TEST_DATA_FILE_NAME)
             
             // Check File Path Exist Or Not
             if !FileManager.default.fileExists(atPath: iCloudDocsURL.path, isDirectory: nil) {
@@ -77,7 +78,7 @@ class iCloudBackUpModel : ObservableObject {
         if let iCloudDocsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") {
             
             // Set File Name Which One We Will Download
-            let iCloudFile = iCloudDocsURL.appendingPathComponent("Youtube_Keyword_data.txt")
+            let iCloudFile = iCloudDocsURL.appendingPathComponent(TEST_DATA_FILE_NAME)
             
             // Check File Path Exist Or Not
             if !FileManager.default.fileExists(atPath: iCloudDocsURL.path, isDirectory: nil) {
@@ -90,7 +91,7 @@ class iCloudBackUpModel : ObservableObject {
                 let localDocsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
                 
                 // Set File Name Which One Downloaded From iCloud Drive
-                let localFile = localDocsURL.appendingPathComponent("Youtube_Keyword_data_\(Date()).txt")
+                let localFile = localDocsURL.appendingPathComponent("\(TEST_DATA_FILE_NAME)_\(Date()).txt")
                 
                 do {
                     // Copy iCloud Drive Data To Local Directory File Contents
@@ -99,7 +100,7 @@ class iCloudBackUpModel : ObservableObject {
                 }
                 catch let error as NSError {
                     // Handling Exception Here When You Developing
-                    print("DATA BACK UP :: GET BACK UP DATA FAIL FROM iCLOUD DRIVER \(error) ")
+                    print("DATA BACK UP :: GET BACK UP DATA FAIL FROM iCLOUD DRIVER \(error.localizedDescription) ")
                 }
             }
             
@@ -110,4 +111,45 @@ class iCloudBackUpModel : ObservableObject {
         
     }
     
+    /// Mark: - deleteCloudDataByFilePath
+    /// Feature: iCloud Drive에 있는 데이터를 지우는 function
+    /// 데이터가 지워진다고 디렉토리가 사라지지 않는다.
+    /// 테스트용으로 따로 따로 만들었지만, path만 받아서 재사용 가능하게 만들어도 괜찮을 것 같다.
+    func deleteCloudDataByFilePath() {
+        
+        if let iCloudDocsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents"){
+            let iCloudFile = iCloudDocsURL.appendingPathComponent(TEST_DATA_FILE_NAME)
+            do {
+                try FileManager.default.removeItem(at: iCloudFile)
+                print("DATA BACK UP :: DELETE CLOUD DATA SUCCESS")
+            }
+            catch let error as NSError {
+                print("DATA BACK UP :: DELETE CLOUD DATA FAIL \(error.localizedDescription)")
+            }
+        } else {
+            // Handling Exception Here When You Developing
+            print("DATA BACK UP :: iCLOUD URL IS NIL CHECK XCODE SETTING")
+        }
+    }
+    
+    /// Mark: - deleteLocalDataByFilePath
+    /// Feature: Local App Directory 내부의 데이터를 지우는 function
+    /// 데이터가 지워지면 디렉토리도 사라진다.
+    /// 테스트용으로 따로 따로 만들었지만, path만 받아서 재사용 가능하게 만들어도 괜찮을 것 같다.
+    func deleteLocalDataByFilePath() {
+        
+        // Set Local Docs URL Here
+        let localDocsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
+
+        // Set File Name Which One Downloaded From iCloud Drive
+        let localFile = localDocsURL.appendingPathComponent(TEST_DATA_FILE_NAME)
+        
+        do {
+            try FileManager.default.removeItem(at: localFile)
+            print("DATA BACK UP :: DELETE SUCCESS")
+        }
+        catch let error as NSError {
+            print("DATA BACK UP :: DELETE DATA FAIL \(error.localizedDescription)")
+        }
+    }
 }
