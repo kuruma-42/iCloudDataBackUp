@@ -56,6 +56,9 @@ struct iCloudBackUpView: View {
                 }
             }
         }
+        .onAppear {
+            cloudBackUpModel.checkIsUserUseiCloud()
+        }
     }
     
 }

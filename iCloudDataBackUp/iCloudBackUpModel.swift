@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// Mark: - iCloudBackUpModel
 /// Feature: iCloud Drive에 데이터 백업을 위한 메소드들이 모여있는 클래스
@@ -150,6 +151,25 @@ class iCloudBackUpModel : ObservableObject {
         }
         catch let error as NSError {
             print("DATA BACK UP :: DELETE DATA FAIL \(error.localizedDescription)")
+        }
+    }
+    
+    /// Mark: - checkIsUserUseiCloud
+    /// - Returns: iCloud 경로가 있는지 없는지에 대한 Bool 값
+    /// Feature: 코드랩 하면서 여러가지 자료들을 찾아봤는데 백업을 시도하는 많은 사람들이
+    /// 경로의 유무로 iCloud drive를 사용하고 있는지 아닌지로 체크를 했다.
+    /// 로직이 실행되기 전에 이 Function을 사용하면 될 것 같다.
+    /// Test Result : iCloud Drive를 활성화 했는지, 안 했는지 테스트를 해봤는데
+    /// 유저가 비활성화를 하면 Path가 없는 것으로 나오고
+    /// 유저가 활성화를 하면 Path가 있는 것으로 나와서 현재로서는 유저의 활성화 여부를 알 수 있는 유일한 방법이다.
+    /// 로직이 시작하기 전에 메소드로 체크하고 시작하면 될 것 같다.
+    func checkIsUserUseiCloud() -> Bool {
+        if let iCloudDocsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") {
+            print("DATA BACK UP :: USER USE iCLOUD DRIVE, HAVE A PATH")
+            return true
+        } else {
+            print("DATA BACK UP :: USER DOES NOT USE iCLOUD DRIVE NO CLOUD PATH")
+            return false
         }
     }
 }
