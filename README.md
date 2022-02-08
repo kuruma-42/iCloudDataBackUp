@@ -25,6 +25,8 @@
 	</dict>
 ```
 - 상기의 코드를 plist를 텍스트 편집기를 열고 붙여야 iCloud에 드라이브를 만들고 또 보일 수 있게한다.
+- 상기의 코드를 plist에 붙여도 iCloud Drive에 안 보인다면, Entitlement 쪽에 NSUbiquitousContainers에 관련된 Key가 생성되었는지 확인한한다.
+- plist와 entitlement development account 쪽 Certificate & identifier 세팅이 잘 안 되면 iCloud Drive 쪽에 폴더가 노출이 안 된다.
 
 # Test View 
 <img src="https://user-images.githubusercontent.com/60722292/152463212-4c4ee13b-a326-4c6d-9797-8c19aa3de6e2.PNG" alt="iCloudDataBackUpPhoto" width="30%" height="30%"/></img>
@@ -32,7 +34,7 @@
 - 다운 받아서 Xcode에서 실행해보면 log를 남겨놨으니 참고하면 좋을 것 같다. 
 
 # 리뷰 
-- 현재는 filmanager로 업로드 했을 때 용량이 꽉 찬 경우 어떻게 대응해야하는지를 찾고있다. 
+- 현재는 filemanager로 업로드 했을 때 용량이 꽉 찬 경우 어떻게 대응해야하는지를 찾고있다. 
 - 다른 기기 또는 앱을 지우고 나서 데이터를 백업 클라우드 드라이브에 올려놨던 백업 데이터를 지우는 것은 쉽다.
 - 하지만 데이터 백업만 하고 그 Zip파일이나 데이터 파일을 복사하거나 타인에게 뿌리는 행위가 생긴다면 
 - 게임에서나 볼 수 있던 돈 복사 아이템 복사의 장이 될 수 있겠다는 생각을 했다. 
